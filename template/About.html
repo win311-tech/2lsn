@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <nav>
+        <ul>
+            <li class="nav-item" id="home">
+              <a href="{% url 'index' %}">Home</a>
+            </li>
+            <li class="nav-item" id="about">
+              <a href="{% url 'about' %}">Culture</a>
+            </li>
+            <li class="nav-item" id="services">
+              <a href="{% url 'shop' %}">Shop</a>
+            </li>
+            <li class="nav-item" id="contact">
+              <a href="{% url 'register' %}">Register</a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="about-page">
+        <h1>THE CULTURE</h1>
+
+        <p>2LSN™️ is for the people carrying pressure every day but still finding a way to move forward.</p>
+
+        <p>“Grindin” isn’t only about chasing money.<br>
+        It’s about waking up tired and still showing up.<br>
+        It’s about staying disciplined when life gets heavy.<br>
+        It’s about building yourself in silence while nobody really sees what it took to get there.<br>
+        <br>
+        2LSN™️ represents the mindset of turning pain into purpose. You say Tools on forever.</p>
+
+        <p>The heart represents everything we feel.
+        The thorns represent the pain, pressure, and growth that shape us — learning from every experience instead of letting it destroy us.</p>
+
+        <p>This brand is for:</p>
+
+        <p>
+         creators<br>
+         hustlers<br>
+         ambitious minds<br>
+         quiet grinders<br>
+         people building something bigger than themselves.
+        </p>
+
+        <p>2LSN™️ is more than clothing.<br>
+        It’s identity built through pressure.</p>
+
+        <p>FORGED IN SILENCE.
+        BUILT FOR THE GRIND.</p>
+    </main>
+{% endblock content %}
+
+{% block script %}
+    <script src="{% static 'js/script.js' %}"></script>
+{% endblock script %}

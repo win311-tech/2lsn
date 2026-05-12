@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2LSN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,900&family=Inter:wght@100;200;300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+     <link rel="stylesheet" href="{% static 'css/register.css' %}">
+      <link rel="stylesheet" href="{% static 'css/shop.css' %}">
+</head>
+{% block content %}
+{% endblock content %}
+
+{% block script %}
+
+    {% load static %}
+
+    <script>
+
+    (() => {
+        const cartBtn      = document.getElementById('cartBtn');
+        const cartClose    = document.getElementById('cartClose');
+        const cartSidebar  = document.getElementById('cartSidebar');
+        const cartBackdrop = document.getElementById('cartBackdrop');
+        const cartItems    = document.getElementById('cartItems');
+        const cartEmpty    = document.getElementById('cartEmpty');
+        const cartCount    = document.getElementById('cartCount');
+        const cartSidebarCount = document.getElementById('cartSidebarCount');
+        const cartTotal    = document.getElementById('cartTotal');
+
+        let cart = [];
+
+        // Open / close cart
+        function openCart() {
+            cartSidebar.classList.add('open');
+            cartBackdrop.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeCart() {
+            cartSidebar.classList.remove('open');
+            cartBackdrop.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        cartBtn.addEventListener('click', openCart);
+        cartClose.addEventListener('click', closeCart);
+        cartBackdrop.addEventListener('click', closeCart);
+
+        // Size selection
+        document.querySelectorAll('.size-options').forEach(group => {
+            group.querySelectorAll('.size-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    group.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                });
+            });
+        });
+
+        // Add to cart
+        document.querySelectorAll('.add-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.product-card');
+                const selectedSize = card.querySelector('.size-btn.selected');
+                const size = selectedSize ? selectedSize.textContent : 'ONE SIZE';
+                const id    = card.dataset.id;
+                const name  = card.dataset.name;
+                const price = parseFloat(card.dataset.price);
+                const img   = card.dataset.img;
+
+                // Check if already in cart (same id + size)
+                const existing = cart.find(i => i.id === id && i.size === size);
+                if (existing) {
+                    existing.qty += 1;
+                } else {
+                    cart.push({ id, name, price, img, size, qty: 1 });
+                }
+                renderCart();
+                openCart();
+            });
+        });
+
+        function renderCart() {
+            const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+            const totalAmt = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+            cartCount.textContent = totalQty;
+            cartSidebarCount.textContent = totalQty;
+            cartTotal.textContent = '$' + totalAmt.toFixed(2);
+
+            // Clear dynamic items
+            cartItems.querySelectorAll('.cart-item').forEach(el => el.remove());
+            cartEmpty.style.display = cart.length ? 'none' : 'block';
+
+            cart.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'cart-item';
+                el.innerHTML = `
+                    <img class="cart-item-img" src="${item.img}" alt="${item.name}">
+                    <div class="cart-item-details">
+                        <p class="cart-item-name">${item.name}</p>
+                        <p class="cart-item-meta">Size: ${item.size} &nbsp;|&nbsp; Qty: ${item.qty}</p>
+                        <p class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</p>
+                    </div>
+                    <button class="cart-item-remove" aria-label="Remove ${item.name}">&#x2715;</button>
+                `;
+                el.querySelector('.cart-item-remove').addEventListener('click', () => {
+                    cart = cart.filter(i => !(i.id === item.id && i.size === item.size));
+                    renderCart();
+                });
+                cartItems.appendChild(el);
+            });
+        }
+    })();
+    </script>
+
+    {% endblock script %}
