@@ -34,12 +34,7 @@ def Register(request):
     else:
         form = SignUpForm()
 
-<<<<<<< HEAD
-    return render(request, 'Register.html', {'form': form})
-
-=======
     return render(request, 'register.html', {'form': form})
->>>>>>> e9c0c02 (Your commit message)
 
 def Login(request):
     """Handle user login"""
