@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-'Grinding.apps.GrindingConfig',
+    'Grinding.apps.GrindingConfig',
     "sass_processor",
     
 ]
@@ -58,7 +58,7 @@ ROOT_URLCONF = 'Toolson.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR /"template", BASE_DIR /"templates"],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
