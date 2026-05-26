@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="checkout-page">
+  <header class="checkout-header">
+    <a class="checkout-back" href="{% url 'shop' %}">Shop</a>
+    <a class="checkout-brand" href="{% url 'index' %}" aria-label="2LSN home">
+      <img src="{% static 'img/mainlogo.png' %}" alt="2LSN">
+    </a>
+    <div class="checkout-header-links">
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'logout' %}">Logout</a>
+      {% else %}
+        <a href="{% url 'register' %}">Register</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <section class="checkout-title-row">
+    <div>
+      <h1>Checkout</h1>
+      <p>Review your bag and complete your delivery details.</p>
+    </div>
+  </section>
+
+  <section class="checkout-shell">
+    <section class="checkout-card" aria-label="Order summary">
+      <div class="checkout-section-title">Order Summary</div>
+      <div id="checkout-items" class="checkout-items">No items.</div>
+
+      <div class="checkout-total-row">
+        <span>Total</span>
+        <strong id="checkout-total">$0.00</strong>
+      </div>
+    </section>
+
+    <section class="checkout-card checkout-details" aria-label="Delivery details">
+      <div class="checkout-section-title">Delivery Details</div>
+      <form class="checkout-form" id="checkout-form">
+        <input type="text" name="name" placeholder="Full name" autocomplete="name" required>
+        <input type="email" name="email" placeholder="Email address" autocomplete="email" required>
+        <input type="text" name="address" placeholder="Delivery address" autocomplete="street-address" required>
+        <input type="text" name="city" placeholder="City" autocomplete="address-level2" required>
+        <input type="number" name="contact" placeholder="Contact number" autocomplete="tel" required>
+        <button type="submit" class="cart-checkout">Place Order</button>
+        <p class="checkout-message" id="checkout-message" aria-live="polite"></p>
+      </form>
+    </section>
+  </section>
+</main>
+{% endblock content %}
+
+{% block script %}
+{{ block.super }}
+<script>
+(() => {
+  const itemsEl = document.getElementById('checkout-items');
+  const totalEl = document.getElementById('checkout-total');
+  const form = document.getElementById('checkout-form');
+  const message = document.getElementById('checkout-message');
+  if (!itemsEl || !totalEl) return;
+
+  let cart = [];
+  try {
+    cart = JSON.parse(localStorage.getItem('twoLsnCart') || '[]');
+  } catch (error) {
+    cart = [];
+  }
+
+  function renderEmptyCart() {
+    itemsEl.textContent = 'No items.';
+    totalEl.textContent = '$0.00';
+  }
+
+  if (!cart.length) {
+    renderEmptyCart();
+    if (message) message.textContent = 'Your shopping bag is empty.';
+    return;
+  }
+
+  itemsEl.textContent = '';
+  const total = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.qty || 0), 0);
+  totalEl.textContent = `$${total.toFixed(2)}`;
+
+  cart.forEach((item) => {
+    const line = document.createElement('div');
+    line.className = 'checkout-line';
+    line.innerHTML = `
+      <img src="${item.img}" alt="${item.name}">
+      <div>
+        <strong>${item.name}</strong>
+        <span>Size: ${item.size} | Qty: ${item.qty}</span>
+      </div>
+      <strong class="checkout-line-price">$${(Number(item.price || 0) * Number(item.qty || 0)).toFixed(2)}</strong>
+    `;
+    itemsEl.appendChild(line);
+  });
+
+  if (form && message) {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      localStorage.removeItem('twoLsnCart');
+      renderEmptyCart();
+      message.textContent = 'Order placed. Your bag has been cleared.';
+      form.reset();
+    });
+  }
+})();
+</script>
+{% endblock script %}

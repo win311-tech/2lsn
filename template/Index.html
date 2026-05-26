@@ -2,35 +2,20 @@
 {% load static %}
 {% block content %}
 
-<nav>
-  <ul>
-    <li class="nav-item" id="home">
-      <a href="{% url 'index' %}">Home</a>
-    </li>
-    <li class="nav-item" id="about">
-      <a href="{% url 'about' %}">Culture</a>
-    </li>
-    <li class="nav-item" id="services">
-      <a href="{% url 'shop' %}">Shop</a>
-    </li>
-    <li class="nav-item" id="contact">
-      <a href="{% url 'register' %}">Register</a>
-    </li>
-  </ul>
-</nav>
+{% include '_site_nav.html' %}
 
 <section class="hero">
   <div class="hero-text">
-    <h1>2LSN</h1>
+    <img src="{% static 'img/mainlogo.png' %}" alt="2LSN" class="mainimg">
     <p>
       Welcome to the 2LSN website! This is a placeholder page for our project.
       Stay tuned for updates and more content coming soon.
     </p>
   </div>
+
   <div class="hero-image">
-      <img src="{% static 'img/Model.jpeg' %}" alt="2LSN ">
+    <img src="{% static 'img/wallpaper.jpeg' %}" alt="2LSN wallpaper" class="wallpaper">
   </div>
 </section>
 
 {% endblock content %}
-

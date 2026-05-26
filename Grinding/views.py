@@ -7,7 +7,7 @@ from .forms import SignUpForm, LoginForm
 
 def Index(request):
     """Public homepage - accessible to everyone"""
-    return render(request, 'index', {
+    return render(request, 'Index.html', {
         'user': request.user
     })
 
@@ -15,7 +15,7 @@ def Index(request):
 def Register(request):
     """Handle user registration"""
     if request.user.is_authenticated:
-        return redirect('Index')
+        return redirect('dashboard')
 
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -23,9 +23,9 @@ def Register(request):
             user = form.save()
             # Log the user in after signup
             login(request, user)
-            messages.success(request, f'Welcome to Tasty Foods, {user.first_name}!')
+            messages.success(request, f'Welcome to 2LSN, {user.first_name}!')
             # Redirect to user dashboard (NOT admin)
-            return redirect('Index')
+            return redirect('dashboard')
         else:
             # Show errors
             for field, errors in form.errors.items():
@@ -39,27 +39,30 @@ def Register(request):
 def Login(request):
     """Handle user login"""
     if request.user.is_authenticated:
-        return redirect('Index')
+        return redirect('dashboard')
 
     if request.method == 'POST':
-        # Get username (email) and password from form
+        # form field names from Login.html are: email, password
         username = request.POST.get('email')
         password = request.POST.get('password')
 
-        # Try to authenticate
+        # Try to authenticate (username is stored as email in SignUpForm.save)
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
             messages.success(request, f'Welcome back, {user.first_name or user.username}!')
             # Redirect to user dashboard (NOT admin)
-            next_url = request.GET.get('next', 'Index')
-            return redirect(next_url)
+            next_url = request.POST.get('next') or request.GET.get('next')
+            # Always redirect to the dashboard unless a valid next is explicitly provided
+            return redirect(next_url or 'dashboard')
+
         else:
             messages.error(request, 'Invalid email or password. Please try again.')
 
     form = LoginForm()
     return render(request, 'Login.html', {'form': form})
+
 
 
 def logout_view(request):
@@ -72,19 +75,25 @@ def logout_view(request):
 @login_required(login_url='login')
 def dashboard_view(request):
     """User dashboard - only for logged-in users"""
-    return render(request, 'Index.html', {
+    return render(request, 'dashboard.html', {
         'user': request.user
     })
 
-def Shop(request):
 
+def Shop(request):
     return render(request, 'Shop.html', {
         'user': request.user
     })
 
 
 def About(request):
-    return render(request, 'about.html', {
+    return render(request, 'About.html', {
+        'user': request.user
+    })
+
+@login_required(login_url='login')
+def checkout(request):
+    return render(request, 'checkout.html', {
         'user': request.user
     })
 

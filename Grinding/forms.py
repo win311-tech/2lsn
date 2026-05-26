@@ -4,11 +4,19 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 
 class SignUpForm(UserCreationForm):
-    name = forms.CharField(
+    first_name = forms.CharField(
         max_length=100,
         required=True,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Full Name',
+            'placeholder': 'First Name',
+            'class': 'form-control'
+        })
+    )
+    last_name = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Last Name',
             'class': 'form-control'
         })
     )
@@ -34,7 +42,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['name', 'email', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'email', 'password1', 'password2']
 
     def clean_email(self):
         email = (self.cleaned_data.get('email') or '').strip()
@@ -48,7 +56,8 @@ class SignUpForm(UserCreationForm):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
         user.username = self.cleaned_data['email']
-        user.first_name = self.cleaned_data['name']
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
         if commit:
             user.save()
         return user

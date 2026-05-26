@@ -1,0 +1,249 @@
+.account-page {
+  min-height: 100vh;
+  background: #fff;
+  color: #101010;
+  font-family: var(--font-accent);
+  display: grid;
+  grid-template-columns: minmax(210px, 22vw) minmax(0, 1fr) minmax(150px, 15vw);
+  grid-template-rows: auto 1fr auto;
+  gap: 0;
+  padding: 2.5rem 3vw 1.5rem;
+}
+
+.account-menu-toggle,
+.account-search {
+  align-self: start;
+  border: 0;
+  background: transparent;
+  color: #222;
+  font: inherit;
+  cursor: pointer;
+}
+
+.account-menu-toggle {
+  width: 80px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.account-menu-toggle span,
+.account-search span {
+  display: block;
+  width: 80px;
+  height: 0;
+  background: transparent;
+  border-top: 1px solid #111;
+}
+
+.account-search {
+  justify-self: end;
+  display: grid;
+  gap: 0.55rem;
+  min-width: 170px;
+  text-align: right;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.account-side {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: center;
+}
+
+.account-nav {
+  display: grid;
+  gap: 1.35rem;
+}
+
+.account-tab {
+  border: 0;
+  background: transparent;
+  color: #555;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.84rem;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.account-tab.is-active {
+  color: #111;
+  font-weight: 700;
+}
+
+.account-tab-sub {
+  display: none;
+  margin: 1rem 0 0 1.5rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.account-tab.is-active + .account-tab-sub {
+  display: list-item;
+}
+
+.account-download {
+  margin-top: 4rem;
+  border: 0;
+  background: transparent;
+  color: #555;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.76rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.account-content {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: center;
+  justify-self: center;
+  width: min(560px, 100%);
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.account-panel {
+  display: none;
+}
+
+.account-panel.is-active {
+  display: grid;
+  place-items: center;
+  gap: 1.4rem;
+}
+
+.account-empty-icon {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #111;
+  position: relative;
+}
+
+.account-empty-icon::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 16px;
+  width: 44px;
+  height: 0;
+  background: transparent;
+  border-top: 1px solid #111;
+  transform: rotate(45deg);
+}
+
+.account-panel h1 {
+  font: inherit;
+  color: #111;
+  font-size: 0.82rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  line-height: 1.8;
+  text-transform: uppercase;
+}
+
+.account-panel p {
+  max-width: 430px;
+  color: #555;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  line-height: 1.8;
+  text-transform: uppercase;
+}
+
+.account-quick-links {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: center;
+  display: grid;
+  gap: 1.35rem;
+  justify-items: end;
+  color: #444;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.account-quick-links strong {
+  color: #111;
+  letter-spacing: 0.08em;
+}
+
+.account-quick-links a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.account-footer {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  display: flex;
+  justify-content: center;
+  gap: clamp(2rem, 8vw, 6rem);
+  padding-top: 2rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.account-footer a {
+  color: #111;
+  text-decoration: none;
+}
+
+@media (max-width: 860px) {
+  .account-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr auto auto;
+    padding: 1.25rem;
+    gap: 1.5rem;
+  }
+
+  .account-search {
+    grid-column: 1;
+    justify-self: stretch;
+    min-width: 0;
+  }
+
+  .account-side {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+    display: none;
+  }
+
+  .account-side.is-open {
+    display: block;
+  }
+
+  .account-content {
+    grid-column: 1;
+    grid-row: 3;
+    min-height: 44vh;
+  }
+
+  .account-quick-links {
+    grid-column: 1;
+    grid-row: 4;
+    justify-items: start;
+    gap: 0.9rem;
+  }
+
+  .account-footer {
+    grid-column: 1;
+    grid-row: 5;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+  }
+}

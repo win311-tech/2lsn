@@ -35,7 +35,7 @@
   flex-direction: column;
   justify-content: flex-start;
   gap: 0;
-  padding: 11.8vh 4.45vw 0;
+  padding: 2rem 4.45vw 0;
 }
 
 .login-brand-col {
@@ -43,24 +43,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 17.5vh;
+  margin-bottom: clamp(2rem, 9vh, 5rem);
 }
 
 .login-brand-heading {
   margin: 0;
-  line-height: 0.8;
+  line-height: 1;
 }
 
 .login-brand {
-  font-family: var(--font-brand);
-  font-size: clamp(4.25rem, 8.6vw, 7.5rem);
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  line-height: 0.8;
-  color: #000;
+  width: 118px;
+  height: 62px;
   text-decoration: none;
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: opacity 0.2s;
+}
+
+.login-brand img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .login-brand:hover {
@@ -89,6 +94,24 @@
   color: #000;
   margin-bottom: 1.75rem;
   text-align: center;
+}
+
+.auth-messages {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0 0 1.2rem;
+}
+
+.auth-message {
+  max-width: none;
+  color: #111;
+  font-family: var(--font-accent);
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .form-group {
@@ -178,8 +201,8 @@
 }
 
 .btn:hover {
-  background: #000;
-  color: #fff;
+  background: #fff;
+  color: #000;
 }
 
 .btn-social {
@@ -189,7 +212,7 @@
 }
 
 .btn-social:hover {
-  background: #f5f5f5;
+  background: #fff;
   color: #000;
 }
 
@@ -227,8 +250,9 @@
   position: absolute;
   top: 50%;
   width: calc(50% - 1rem);
-  height: 1px;
-  background: #d4d4d4;
+  height: 0;
+  background: transparent;
+  border-top: 1px solid #d4d4d4;
 }
 
 .divider::before {
@@ -300,7 +324,8 @@
   }
 
   .login-brand {
-    font-size: clamp(4.2rem, 14vw, 7rem);
+    width: 104px;
+    height: 56px;
   }
 }
 
@@ -318,6 +343,7 @@
   }
 
   .login-brand {
-    font-size: clamp(3.2rem, 18vw, 5.5rem);
+    width: 92px;
+    height: 50px;
   }
 }

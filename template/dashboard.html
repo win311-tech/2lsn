@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="account-page">
+  <button class="account-menu-toggle" type="button" aria-label="Open account menu" aria-expanded="false">
+    <span></span>
+  </button>
+
+  <button class="account-search" type="button">
+    Search
+    <span></span>
+  </button>
+
+  <aside class="account-side" id="accountMenu" aria-label="Account sections">
+    <nav class="account-nav">
+      <button class="account-tab is-active" type="button" data-panel="purchases">|01| Purchases</button>
+      <span class="account-tab-sub">Online</span>
+      <button class="account-tab" type="button" data-panel="favourites">|02| Favourites</button>
+      <button class="account-tab" type="button" data-panel="Contact Us">|03| Contact Us</button>
+      <button class="account-tab" type="button" data-panel="settings">|04| Settings</button>
+      <button class="account-tab" type="button" data-panel="notifications">|05| Notifications</button>
+    </nav>
+  </aside>
+
+  <section class="account-content" aria-live="polite">
+    <article class="account-panel is-active" id="panel-purchases">
+      <div class="account-empty-icon" aria-hidden="true"></div>
+      <h1>You have not placed any orders yet</h1>
+    </article>
+
+    <article class="account-panel" id="panel-favourites">
+      <h1>No favourites saved yet</h1>
+      <p>Products you save from the shop will appear here.</p>
+    </article>
+
+    <article class="account-panel" id="panel-Contact Us">
+      <h1>Contact Us</h1>
+      <p>0202117060</p>
+    </article>
+
+    <article class="account-panel" id="panel-settings">
+      <h1>Settings</h1>
+      <p>Account preferences and privacy settings will open here without leaving the dashboard.</p>
+    </article>
+
+    <article class="account-panel" id="panel-notifications">
+      <h1>Notifications</h1>
+      <p>You do not have any notifications at the moment.</p>
+    </article>
+  </section>
+
+  <aside class="account-quick-links" aria-label="Account shortcuts">
+    <a href="{% url 'checkout' %}">Shopping Bag <span id="dashboardBagCount">[ 0 ]</span></a>
+    <strong>Winfred</strong>
+    <a href="#">Help</a>
+  </aside>
+
+  <footer class="account-footer">
+    <a href="#">Help</a>
+    <a href="https://www.instagram.com/2lsn._4rva?igsh=MTJ6Mzhnd2kwdTI2Yg==">Follow Us</a>
+    <a href="#">Company</a>
+    <a href="#">Policies</a>
+  </footer>
+</main>
+{% endblock content %}
+
+{% block script %}
+{{ block.super }}
+<script>
+(() => {
+  const menu = document.getElementById('accountMenu');
+  const menuToggle = document.querySelector('.account-menu-toggle');
+  const tabs = document.querySelectorAll('.account-tab');
+  const panels = document.querySelectorAll('.account-panel');
+  const bagCount = document.getElementById('dashboardBagCount');
+
+  function updateBagCount() {
+    if (!bagCount) return;
+
+    let cart = [];
+    try {
+      cart = JSON.parse(localStorage.getItem('twoLsnCart') || '[]');
+    } catch (error) {
+      cart = [];
+    }
+
+    const totalQty = cart.reduce((sum, item) => sum + Number(item.qty || 0), 0);
+    bagCount.textContent = `[ ${totalQty} ]`;
+  }
+
+  updateBagCount();
+  window.addEventListener('storage', updateBagCount);
+
+  if (menuToggle && menu) {
+    menuToggle.addEventListener('click', () => {
+      const isOpen = menu.classList.toggle('is-open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((item) => item.classList.remove('is-active'));
+      panels.forEach((panel) => panel.classList.remove('is-active'));
+      tab.classList.add('is-active');
+
+      const panel = document.getElementById(`panel-${tab.dataset.panel}`);
+      if (panel) panel.classList.add('is-active');
+
+      if (window.innerWidth <= 860 && menu) {
+        menu.classList.remove('is-open');
+        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+})();
+</script>
+{% endblock script %}
