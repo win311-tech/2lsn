@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: toolson
+    runtime: python
+    buildCommand: pip install -r Toolson/requirements.txt && python Toolson/manage.py collectstatic --no-input
+    startCommand: gunicorn Toolson.wsgi:application --bind 0.0.0.0:$PORT
