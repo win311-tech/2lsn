@@ -1,0 +1,255 @@
+:root {
+  --color-heading: #000000;
+  --color-body: #1a1a1a;
+  --color-bg: #ffffff;
+  --color-nav-bg: #ffffff;
+  --font-brand: 'Bodoni Moda', Didot, 'Bodoni MT', 'Big Caslon', Georgia, serif;
+  --font-accent: 'Inter', 'Helvetica Now Text', Helvetica, Arial, sans-serif;
+  --font-primary: 'Helvetica Now Text', Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+body {
+  font-family: var(--font-primary);
+  min-height: 100vh;
+}
+
+
+nav {
+  background-color: transparent;
+}
+
+body {
+  background: #ffffff !important;
+}
+
+/* Ensure the very bottom/background stays white even if child sections use different backgrounds */
+body::before {
+  content: "";
+  display: block;
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: -1;
+  pointer-events: none;
+}
+
+
+
+
+
+
+.site-nav {
+  min-height: 50px;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0;
+}
+
+.nav-item a {
+  display: block;
+  color: #333333;
+  text-align: center;
+  padding: 14px clamp(0.55rem, 1.4vw, 1rem);
+  text-decoration: none;
+  font-size: clamp(0.68rem, 1.5vw, 0.9rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-item a:hover {
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: calc(100vh - 50px);
+  padding: 0 6%;
+  gap: 0;
+}
+
+.hero-text {
+  width: 50%;
+  min-width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.2rem;
+  padding-right: 2rem;
+}
+
+.hero-text .mainimg {
+  width: clamp(120px, 22vw, 320px);
+  height: auto;
+  display: block;
+  margin-bottom: 0.55rem;
+  object-fit: contain;
+}
+
+h1 {
+  font-family: var(--font-brand);
+  color: var(--color-heading);
+  font-size: clamp(4.5rem, 10vw, 9rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 0.95;
+}
+
+p {
+  font-family: var(--font-accent);
+  color: #555;
+  font-size: clamp(0.78rem, 1.1vw, 0.92rem);
+  font-weight: 200;
+  letter-spacing: 0.1em;
+  line-height: 1.9;
+  max-width: 380px;
+  text-transform: uppercase;
+}
+
+.hero-text p {
+  margin-top: 0;
+}
+
+.hero-image {
+  width: 50%;
+  min-width: 50%;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  min-height: calc(100vh - 50px);
+  overflow: hidden;
+}
+
+.hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  padding: 3rem 5rem;
+  box-sizing: border-box;
+}
+
+.hero-image img.wallpaper {
+  object-fit: contain;
+  background: #fff;
+  padding: 3rem 2.5rem;
+}
+
+@media (max-width: 1024px) {
+  .hero {
+    padding: 0 4%;
+  }
+
+  .hero-image img.wallpaper {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-nav {
+    min-height: auto;
+    padding: 0.6rem 0.75rem;
+    justify-content: center;
+  }
+
+  .site-nav ul {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.35rem;
+  }
+
+  .nav-item a {
+    min-height: 2.25rem;
+    padding: 0.65rem 0.35rem;
+    border: 1px solid #eeeeee;
+    font-size: 0.68rem;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero {
+    flex-direction: column;
+    padding: 1.25rem 0 0;
+    gap: 1.25rem;
+    min-height: auto;
+  }
+
+  .hero-text {
+    flex: unset;
+    width: 100%;
+    min-width: 0;
+    padding: 0 1.25rem;
+  }
+
+  .hero-image {
+    flex: unset;
+    width: 100%;
+    min-width: 0;
+    min-height: 68vh;
+    max-height: none;
+  }
+
+  .hero-image img {
+    height: 68vh;
+    max-height: none;
+    padding: 0;
+  }
+
+  .hero-image img.wallpaper {
+    width: 100%;
+    height: 68vh;
+    object-fit: cover;
+    object-position: center;
+    padding: 0;
+  }
+
+  p {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-nav ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nav-item a {
+    font-size: 0.62rem;
+  }
+
+  .hero-image,
+  .hero-image img,
+  .hero-image img.wallpaper {
+    min-height: 72vh;
+    height: 72vh;
+  }
+}

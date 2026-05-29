@@ -1,0 +1,42 @@
+# Python
+*.py[cod]
+__pycache__/
+*$py.class
+*.so
+build/
+dist/
+*.log
+local_settings.py
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+
+# Temporary files
+temp_*.css
+_PUSH_INSTRUCTIONS*
+cryptomus*.html
+
+# Disabled git metadata (copied git directory)
+.git_disabled/
+
+# IDE and tool data
+.kombai/
+.dist/
+__pycache__/
