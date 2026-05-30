@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.conf import settings
 from .forms import SignUpForm, LoginForm
 import os
 from django.http import HttpResponse
@@ -40,7 +41,10 @@ def Register(request):
     else:
         form = SignUpForm()
 
-    return render(request, 'register', {'form': form})
+    return render(request, 'Register.html', {
+        'form': form,
+        'google_oauth_client_id': settings.GOOGLE_OAUTH_CLIENT_ID,
+    })
 
 def Login(request):
     """Handle user login"""
@@ -67,7 +71,10 @@ def Login(request):
             messages.error(request, 'Invalid email or password. Please try again.')
 
     form = LoginForm()
-    return render(request, 'Login.html', {'form': form})
+    return render(request, 'Login.html', {
+        'form': form,
+        'google_oauth_client_id': settings.GOOGLE_OAUTH_CLIENT_ID,
+    })
 
 
 
@@ -114,23 +121,45 @@ def auth_receiver(request):
     """
     Google calls this URL after the user has signed in with their Google account.
     """
-    print('Inside')
-    token = request.POST['credential']
- 
+    token = request.POST.get('credential')
+    if not token:
+        return HttpResponse('Missing Google credential.', status=400)
+
+    client_id = settings.GOOGLE_OAUTH_CLIENT_ID or os.environ.get('GOOGLE_OAUTH_CLIENT_ID')
+    if not client_id:
+        return HttpResponse('Google OAuth client ID is not configured.', status=500)
+
     try:
         user_data = id_token.verify_oauth2_token(
-            token, requests.Request(), os.environ['GOOGLE_OAUTH_CLIENT_ID']
+            token, requests.Request(), client_id
         )
     except ValueError:
-        return HttpResponse(status=403)
- 
-    # In a real app, I'd also save any new user here to the database.
-    # You could also authenticate the user here using the details from Google (https://docs.djangoproject.com/en/4.2/topics/auth/default/#how-to-log-a-user-in)
-    request.session['user_data'] = user_data
- 
-    return redirect('sign_in')
- 
+        return HttpResponse('Invalid Google token.', status=403)
+
+    email = user_data.get('email')
+    if not email:
+        return HttpResponse('Google account did not provide an email address.', status=400)
+
+    User = get_user_model()
+    user, created = User.objects.get_or_create(
+        username=email,
+        defaults={
+            'email': email,
+            'first_name': user_data.get('given_name', ''),
+            'last_name': user_data.get('family_name', ''),
+        }
+    )
+
+    if created:
+        user.set_unusable_password()
+        user.save()
+
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request, user)
+    return redirect('dashboard')
+
+
 def sign_out(request):
-    del request.session['user_data']
-    return redirect('sign_in')
+    request.session.pop('user_data', None)
+    return redirect('login')
  
