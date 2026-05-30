@@ -2,7 +2,9 @@ services:
   - type: web
     name: toolson
     runtime: python
+    pythonVersion: 3.12.6
     workingDirectory: Toolson
+
 
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
 
