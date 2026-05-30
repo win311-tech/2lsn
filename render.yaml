@@ -6,6 +6,8 @@ services:
     workingDirectory: Toolson
 
 
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    buildCommand: pip install -r requirements.txt
+
+
 
     startCommand: gunicorn Toolson.wsgi:application --bind 0.0.0.0:$PORT
