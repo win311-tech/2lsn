@@ -1,8 +1,17 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.conf import settings
+from django.http import HttpResponse
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from .forms import SignUpForm, LoginForm
+
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
+User = get_user_model()
 
 
 def Index(request):
@@ -34,7 +43,10 @@ def Register(request):
     else:
         form = SignUpForm()
 
-    return render(request, 'Register.html', {'form': form})
+    return render(request, 'Register.html', {
+        'form': form,
+        'google_oauth_client_id': settings.GOOGLE_OAUTH_CLIENT_ID,
+    })
 
 def Login(request):
     """Handle user login"""
@@ -61,8 +73,54 @@ def Login(request):
             messages.error(request, 'Invalid email or password. Please try again.')
 
     form = LoginForm()
-    return render(request, 'Login.html', {'form': form})
+    return render(request, 'Login.html', {
+        'form': form,
+        'google_oauth_client_id': settings.GOOGLE_OAUTH_CLIENT_ID,
+        'google_login_uri': request.build_absolute_uri(reverse('auth_receiver'))
+    })
 
+
+
+
+@csrf_exempt
+def auth_receiver(request):
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+
+    token = request.POST.get('credential')
+    if not token:
+        return HttpResponse('Missing credential token', status=400)
+
+    client_id = settings.GOOGLE_OAUTH_CLIENT_ID
+    if not client_id:
+        return HttpResponse('Google OAuth client ID is not configured.', status=500)
+
+    try:
+        user_data = id_token.verify_oauth2_token(
+            token,
+            requests.Request(),
+            client_id
+        )
+    except ValueError:
+        return HttpResponse('Invalid Google token.', status=403)
+
+    email = user_data.get('email')
+    if not email:
+        return HttpResponse('Google account did not provide an email address.', status=400)
+
+    user = User.objects.filter(username__iexact=email).first() or User.objects.filter(email__iexact=email).first()
+    if user is None:
+        user = User.objects.create_user(username=email, email=email)
+        user.first_name = user_data.get('given_name', '')
+        user.last_name = user_data.get('family_name', '')
+        user.set_unusable_password()
+        user.save()
+    elif user.username.lower() != email.lower():
+        user.username = email
+        user.save(update_fields=['username'])
+
+    login(request, user)
+    return redirect('dashboard')
 
 
 def logout_view(request):

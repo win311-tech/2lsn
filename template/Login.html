@@ -2,6 +2,51 @@
 {% load static %}
 
 {% block content %}
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+  function handleCredentialResponse(response) {
+    // The response will be a JWT
+    // We need to post it to the backend to verify and sign in
+    fetch('{% url "auth_receiver" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken')
+      },
+      body: 'credential=' + encodeURIComponent(response.credential)
+    }).then(resp => {
+      if (resp.ok) {
+        window.location.href = '{% url "dashboard" %}';
+      } else {
+        console.error('Auth failed:', resp.status);
+      }
+    });
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  window.onload = function() {
+    if (google && google.accounts) {
+      google.accounts.id.initialize({
+        client_id: "{{ google_oauth_client_id }}",
+        callback: handleCredentialResponse
+      });
+    }
+  };
+</script>
 <main class="login-page">
   <section class="login-editorial" aria-label="Login image">
     <img src="{% static 'img/product1.png' %}" alt="2LSN Product Image">
@@ -51,8 +96,28 @@
 
         <div class="divider">or</div>
 
-        <p class="section-label">Access with</p>
-        <button class="btn btn-social" type="button" aria-label="Continue with Google">Continue with Google</button>
+        {% if google_oauth_client_id %}
+          <p class="section-label">Access with</p>
+          
+          <!-- Google Sign-In Button (client-side) -->
+          <div id="g_id_onload"
+               data-client_id="{{ google_oauth_client_id }}"
+               data-context="signin"
+               data-ux_mode="popup"
+               data-itp_support="true">
+          </div>
+
+          <div class="g_id_signin"
+               data-type="standard"
+               data-shape="rectangular"
+               data-theme="outline"
+               data-text="signin_with"
+               data-size="large"
+               data-logo_alignment="left">
+          </div>
+        {% else %}
+          <p class="section-label">Google sign in is not configured.</p>
+        {% endif %}
 
         <div class="login-footer">
           {% if user.is_authenticated %}

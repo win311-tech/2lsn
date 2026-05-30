@@ -4,4 +4,5 @@ gunicorn>=21
 whitenoise>=6.0
 requests>=2.32.5
 social-auth-core>=4.8
+google-auth>=3.19
 django-sass-processor>=1.4

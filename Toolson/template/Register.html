@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<script src="https://accounts.google.com/gsi/client" async></script>
 <main class="register-page">
   <div class="register-layout">
     <section class="register-left" aria-label="Register form">
@@ -56,11 +57,28 @@
 
           <p class="section-label">Already have an account?</p>
           <div class="register-footer">
+           <div id="g_id_onload"
+     data-client_id="279461658961-g398q5mddnao66j4469k0i7f5i9sk0m4.apps.googleusercontent.com"
+     data-context="signin"
+     data-ux_mode="popup"
+     data-login_uri="https://twolsn.onrender.com/"
+     data-itp_support="true">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="outline"
+     data-text="signin_with"
+     data-size="large"
+     data-logo_alignment="left">
+</div>
             {% if user.is_authenticated %}
               <a href="{% url 'dashboard' %}">Dashboard</a>
             {% else %}
               <a href="{% url 'login' %}">Login</a>
             {% endif %}
+
             <a href="{% url 'index' %}">Back to Home</a>
           </div>
         </form>

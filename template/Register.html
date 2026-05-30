@@ -2,6 +2,51 @@
 {% load static %}
 
 {% block content %}
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+  function handleCredentialResponse(response) {
+    // The response will be a JWT
+    // We need to post it to the backend to verify and sign in
+    fetch('{% url "auth_receiver" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken')
+      },
+      body: 'credential=' + encodeURIComponent(response.credential)
+    }).then(resp => {
+      if (resp.ok) {
+        window.location.href = '{% url "dashboard" %}';
+      } else {
+        console.error('Auth failed:', resp.status);
+      }
+    });
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  window.onload = function() {
+    if (google && google.accounts) {
+      google.accounts.id.initialize({
+        client_id: "{{ google_oauth_client_id }}",
+        callback: handleCredentialResponse
+      });
+    }
+  };
+</script>
 <main class="register-page">
   <div class="register-layout">
     <section class="register-left" aria-label="Register form">
@@ -53,6 +98,29 @@
           <button type="submit" class="btn">Register</button>
 
           <div class="divider">or</div>
+
+          {% if google_oauth_client_id %}
+            <p class="section-label">Access with</p>
+            
+            <!-- Google Sign-In Button (client-side) -->
+            <div id="g_id_onload"
+                 data-client_id="{{ google_oauth_client_id }}"
+                 data-context="signup"
+                 data-ux_mode="popup"
+                 data-itp_support="true">
+            </div>
+
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-shape="rectangular"
+                 data-theme="outline"
+                 data-text="signup_with"
+                 data-size="large"
+                 data-logo_alignment="left">
+            </div>
+          {% else %}
+            <p class="section-label">Google sign up is not configured.</p>
+          {% endif %}
 
           <p class="section-label">Already have an account?</p>
           <div class="register-footer">

@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<script src="https://accounts.google.com/gsi/client" async></script>
 <main class="login-page">
   <section class="login-editorial" aria-label="Login image">
     <img src="{% static 'img/product1.png' %}" alt="2LSN Product Image">
@@ -52,7 +53,22 @@
         <div class="divider">or</div>
 
         <p class="section-label">Access with</p>
-        <button class="btn btn-social" type="button" aria-label="Continue with Google">Continue with Google</button>
+<div id="g_id_onload"
+     data-client_id="279461658961-g398q5mddnao66j4469k0i7f5i9sk0m4.apps.googleusercontent.com"
+     data-context="signin"
+     data-ux_mode="popup"
+     data-login_uri="https://twolsn.onrender.com/"
+     data-itp_support="true">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="outline"
+     data-text="signin_with"
+     data-size="large"
+     data-logo_alignment="left">
+</div>
 
         <div class="login-footer">
           {% if user.is_authenticated %}

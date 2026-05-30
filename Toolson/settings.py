@@ -12,9 +12,15 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+dotenv_path = BASE_DIR / 'Toolson' / '.env'
+load_dotenv(dotenv_path)
+
+GOOGLE_OAUTH_CLIENT_ID = os.environ.get('GOOGLE_OAUTH_CLIENT_ID')
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
