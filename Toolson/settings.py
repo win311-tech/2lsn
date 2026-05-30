@@ -56,7 +56,7 @@ TEMPLATES = [
         'DIRS': [
             BASE_DIR / 'template',
             BASE_DIR / 'templates',
-            BASE_DIR / 'Toolson' / 'templates',
+            BASE_DIR / 'Toolson' / 'template',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
