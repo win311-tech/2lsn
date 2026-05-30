@@ -95,7 +95,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR.parent / 'static']
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Ensure collected static goes to STATIC_ROOT for Render/Whitenoise
 # (your deploy should run: python manage.py collectstatic --noinput).
