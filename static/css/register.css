@@ -1,0 +1,286 @@
+/* ── Register Page ── */
+.register-page {
+  background: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Two-column layout ── */
+.register-layout {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  min-height: calc(100vh - 73px); /* subtract header height */
+}
+
+.register-left {
+  flex: 1 1 50%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+.register-right {
+  flex: 1 1 50%;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.register-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  max-width: 480px;
+  max-height: 80vh;
+}
+
+/* ── Header ── */
+.register-header {
+  padding: 0 0 2rem;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.register-header .brand {
+  width: 118px;
+  height: 62px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-header .brand img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── Main container ── */
+.register-container {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem 2rem 4rem;
+}
+
+/* ── Page title ── */
+.register-title {
+  font-family: var(--font-accent);
+  font-size: 0.72rem;
+  font-weight: 200;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: 2.8rem;
+}
+
+.auth-messages {
+  display: grid;
+  gap: 0.45rem;
+  margin: -1.5rem 0 1.5rem;
+}
+
+.auth-message {
+  max-width: none;
+  color: #111;
+  font-family: var(--font-accent);
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+/* ── Floating label inputs ── */
+.form-group {
+  position: relative;
+  margin-bottom: 1.8rem;
+}
+
+.form-group input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #c8c8c8;
+  padding: 1.4rem 0 0.5rem;
+  font-family: var(--font-accent);
+  font-size: 0.82rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  background: transparent;
+  outline: none;
+  color: #000;
+  transition: border-color 0.2s;
+}
+
+.form-group label {
+  position: absolute;
+  top: 1.2rem;
+  left: 0;
+  font-family: var(--font-accent);
+  font-size: 0.68rem;
+  font-weight: 200;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #999;
+  transition: top 0.2s ease, font-size 0.2s ease, color 0.2s ease;
+  pointer-events: none;
+}
+
+.form-group input:focus ~ label,
+.form-group input:not(:placeholder-shown) ~ label {
+  top: 0;
+  font-size: 0.58rem;
+  color: #555;
+}
+
+.form-group input:focus {
+  border-bottom-color: #000;
+}
+
+/* ── Buttons ── */
+.btn {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border: 1px solid #000;
+  background: transparent;
+  font-family: var(--font-accent);
+  font-size: 0.7rem;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #000;
+  margin-bottom: 0.65rem;
+  transition: background 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+.btn-social {
+  border-color: #d4d4d4;
+  color: #333;
+}
+
+.btn-social:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* ── OR divider ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0 1.6rem;
+  font-family: var(--font-accent);
+  font-size: 0.62rem;
+  font-weight: 200;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #bbb;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 0;
+  background: transparent;
+  border-top: 1px solid #e4e4e4;
+}
+
+/* ── Labels & disclaimer ── */
+.section-label {
+  font-family: var(--font-accent);
+  font-size: 0.64rem;
+  font-weight: 200;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 0.9rem;
+}
+
+.disclaimer {
+  font-family: var(--font-accent);
+  font-size: 0.65rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: #999;
+  line-height: 1.7;
+  margin-bottom: 1.2rem;
+}
+
+.disclaimer a {
+  color: #555;
+  text-decoration: underline;
+}
+
+/* ── Footer links ── */
+.register-footer {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  border-top: 1px solid #ebebeb;
+  padding-top: 2rem;
+}
+
+.register-footer a {
+  font-family: var(--font-accent);
+  font-size: 0.68rem;
+  font-weight: 200;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #000;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.register-footer a:hover {
+  opacity: 0.5;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .register-layout {
+    flex-direction: column;
+  }
+
+  .register-right {
+    position: static;
+    height: 50vw;
+    flex: unset;
+  }
+
+  .register-left {
+    flex: unset;
+  }
+}
+
+@media (max-width: 540px) {
+  .register-header {
+    padding: 0 0 1.5rem;
+  }
+
+  .register-container {
+    padding: 2rem 1.2rem 3rem;
+  }
+
+  .register-right {
+    height: 60vw;
+  }
+}

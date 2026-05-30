@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% include '_site_nav.html' %}
+
+<main class="about-page">
+  <section class="about-hero">
+    <p class="about-kicker"></p>
+    <h1>The Culture</h1>
+  </section>
+
+  <section class="about-layout">
+    <article class="about-lead">
+      <h2>Built For Pressure</h2>
+      <p>
+        2LSN is built for the ones carrying pressure every day but still finding a way to move forward.
+      </p>
+    </article>
+
+    <article class="about-block">
+      <h2>The Grind</h2>
+      <p>
+        Grinding is not just about money. It is discipline, sacrifice, and staying solid when life gets heavy.
+      </p>
+    </article>
+
+    <article class="about-block">
+      <h2>The Symbol</h2>
+      <p>
+        The heart represents emotion. The thorns represent pain, pressure, growth, and every lesson earned along the way.
+      </p>
+    </article>
+
+    <article class="about-block">
+      <h2>The People</h2>
+      <p>
+        For the creators, the hustlers, the quiet grinders, and the ambitious minds building something bigger than themselves.
+      </p>
+    </article>
+  </section>
+
+  <section class="about-closing">
+    <p>More than clothing. It is a mindset.</p>
+    <div class="about-signature">
+      <span>Tools On Forever</span>
+      <span>2LSN 4RVA</span>
+      <span>24</span>
+    </div>
+    <a href="{% url 'shop' %}" class="about-action">Shop Now</a>
+  </section>
+</main>
+{% endblock %}
