@@ -2,11 +2,61 @@
 {% load static %}
 
 {% block content %}
-<script src="https://accounts.google.com/gsi/client" async></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+  function handleCredentialResponse(response) {
+    fetch('{% url "auth_receiver" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken')
+      },
+      body: 'credential=' + encodeURIComponent(response.credential)
+    }).then(resp => {
+      if (resp.ok) {
+        window.location.href = '{% url "dashboard" %}';
+      } else {
+        console.error('Auth failed:', resp.status);
+      }
+    });
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  window.onload = function() {
+    if (google && google.accounts) {
+      google.accounts.id.initialize({
+        client_id: "{{ google_oauth_client_id }}",
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.renderButton(
+        document.getElementById('google-signin-button'),
+        {
+          type: 'standard',
+          shape: 'rectangular',
+          theme: 'outline',
+          text: 'signin_with',
+          size: 'large',
+          logo_alignment: 'left'
+        }
+      );
+    }
+  };
+</script>
 <main class="login-page">
-  <section class="login-editorial" aria-label="Login image">
-    <img src="{% static 'img/product1.png' %}" alt="2LSN Product Image">
-  </section>
 
   <section class="login-bottom">
     <div class="login-brand-col">
@@ -52,23 +102,12 @@
 
         <div class="divider">or</div>
 
-        <p class="section-label">Access with</p>
-<div id="g_id_onload"
-     data-client_id="279461658961-g398q5mddnao66j4469k0i7f5i9sk0m4.apps.googleusercontent.com"
-     data-context="signin"
-     data-ux_mode="popup"
-     data-login_uri="https://twolsn.onrender.com/"
-     data-itp_support="true">
-</div>
-
-<div class="g_id_signin"
-     data-type="standard"
-     data-shape="rectangular"
-     data-theme="outline"
-     data-text="signin_with"
-     data-size="large"
-     data-logo_alignment="left">
-</div>
+        {% if google_oauth_client_id %}
+          <p class="section-label">Access with</p>
+          <div id="google-signin-button"></div>
+        {% else %}
+          <p class="section-label">Google sign in is not configured.</p>
+        {% endif %}
 
         <div class="login-footer">
           {% if user.is_authenticated %}
