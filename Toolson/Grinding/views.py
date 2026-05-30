@@ -35,7 +35,7 @@ def Register(request):
     else:
         form = SignUpForm()
 
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'register', {'form': form})
 
 def Login(request):
     """Handle user login"""
