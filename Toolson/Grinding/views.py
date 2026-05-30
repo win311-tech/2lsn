@@ -7,7 +7,8 @@ from .forms import SignUpForm, LoginForm
 
 def Index(request):
     """Public homepage - accessible to everyone"""
-    return render(request, 'Index.html', {
+    return render(request, 'index.html', {
+
         'user': request.user
     })
 
