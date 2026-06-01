@@ -33,6 +33,10 @@ temp_*.css
 _PUSH_INSTRUCTIONS*
 cryptomus*.html
 
+# Google OAuth client secrets (never commit)
+client_secret_*.json
+
+
 # Disabled git metadata (copied git directory)
 .git_disabled/
 
