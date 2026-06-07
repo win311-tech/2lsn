@@ -9,7 +9,7 @@
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken')
+        'X-CSRFToken': (document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken'))
       },
       body: 'credential=' + encodeURIComponent(response.credential)
     }).then(resp => {
@@ -111,6 +111,9 @@
           {% if google_oauth_client_id %}
             <p class="section-label">Access with</p>
             <div id="google-signup-button"></div>
+            <p style="margin-top:10px;font-size:11px;color:#666;word-break:break-all;" aria-label="debug-google-client-id">
+              Google client_id (debug): {{ google_oauth_client_id|truncatechars:10 }}
+            </p>
           {% else %}
             <p class="section-label">Google sign up is not configured.</p>
           {% endif %}

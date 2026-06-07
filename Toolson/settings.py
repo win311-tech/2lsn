@@ -20,7 +20,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = BASE_DIR / 'Toolson' / '.env'
 load_dotenv(dotenv_path)
 
+# Google Identity Services client id used by Login/Register templates
+# Expected format: 279461658961-xxxx.apps.googleusercontent.com
 GOOGLE_OAUTH_CLIENT_ID = os.environ.get('GOOGLE_OAUTH_CLIENT_ID')
+
 
 
 # SECURITY WARNING: keep the secret key used in production secret!

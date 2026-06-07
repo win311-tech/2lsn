@@ -116,11 +116,9 @@ def checkout(request):
 def sign_in(request):
     return render(request, 'sign_in.html')
  
-@csrf_exempt
 def auth_receiver(request):
-    """
-    Google calls this URL after the user has signed in with their Google account.
-    """
+    """Google Identity sends the credential to this endpoint."""
+
     token = request.POST.get('credential')
     if not token:
         return HttpResponse('Missing Google credential.', status=400)
@@ -133,8 +131,9 @@ def auth_receiver(request):
         user_data = id_token.verify_oauth2_token(
             token, requests.Request(), client_id
         )
-    except ValueError:
-        return HttpResponse('Invalid Google token.', status=403)
+    except ValueError as e:
+        return HttpResponse(f'Invalid Google token: {e}', status=403)
+
 
     email = user_data.get('email')
     if not email:
