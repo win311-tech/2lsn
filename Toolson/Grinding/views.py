@@ -11,6 +11,16 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 
 
+def redirect_localhost(request):
+    host = request.get_host()
+    if host.startswith('127.0.0.1'):
+        parts = host.split(':', 1)
+        port = parts[1] if len(parts) > 1 else ''
+        new_host = f'localhost:{port}' if port else 'localhost'
+        return request.build_absolute_uri(request.get_full_path()).replace(host, new_host, 1)
+    return None
+
+
 def Index(request):
     """Public homepage - accessible to everyone"""
     return render(request, 'index.html', {
@@ -23,6 +33,10 @@ def Register(request):
     """Handle user registration"""
     if request.user.is_authenticated:
         return redirect('dashboard')
+
+    redirect_url = redirect_localhost(request)
+    if redirect_url:
+        return redirect(redirect_url)
 
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -50,6 +64,10 @@ def Login(request):
     """Handle user login"""
     if request.user.is_authenticated:
         return redirect('dashboard')
+
+    redirect_url = redirect_localhost(request)
+    if redirect_url:
+        return redirect(redirect_url)
 
     if request.method == 'POST':
         # form field names from Login.html are: email, password

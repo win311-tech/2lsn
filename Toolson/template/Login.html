@@ -4,57 +4,90 @@
 {% block content %}
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-  function handleCredentialResponse(response) {
-    fetch('{% url "auth_receiver" %}', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': (document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken'))
-      },
-      body: 'credential=' + encodeURIComponent(response.credential)
-    }).then(resp => {
-      if (resp.ok) {
-        window.location.href = '{% url "dashboard" %}';
-      } else {
-        console.error('Auth failed:', resp.status);
-      }
-    });
-  }
+  window.addEventListener('load', function initializeGoogleAuth() {
+    const button = document.getElementById('google-signin-button');
+    const clientId = "{{ google_oauth_client_id }}";
 
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
+    if (window.location.hostname === '127.0.0.1') {
+      window.location.replace(window.location.href.replace('127.0.0.1', 'localhost'));
+      return;
+    }
+
+    if (!clientId) {
+      console.warn('Google OAuth client is not configured.');
+      return;
+    }
+
+    if (!button) {
+      console.warn('Google signin button container not found.');
+      return;
+    }
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
         }
       }
+      return cookieValue;
     }
-    return cookieValue;
-  }
 
-  window.onload = function() {
-    if (google && google.accounts) {
-      google.accounts.id.initialize({
-        client_id: "{{ google_oauth_client_id }}",
-        callback: handleCredentialResponse
+    function handleCredentialResponse(response) {
+      if (!response?.credential) {
+        console.error('Google auth failed: no credential returned.');
+        return;
+      }
+
+      fetch('{% url "auth_receiver" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': (document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken'))
+        },
+        body: 'credential=' + encodeURIComponent(response.credential),
+        credentials: 'same-origin'
+      }).then(async (resp) => {
+        if (!resp.ok) {
+          const body = await resp.text().catch(() => '');
+          console.error('Auth failed:', resp.status, body);
+          return;
+        }
+        window.location.replace('{% url "dashboard" %}');
+      }).catch((error) => {
+        console.error('Auth request failed:', error);
       });
-      google.accounts.id.renderButton(
-        document.getElementById('google-signin-button'),
-        {
-          type: 'standard',
-          shape: 'rectangular',
-          theme: 'outline',
-          text: 'signin_with',
-          size: 'large',
-          logo_alignment: 'left'
-        }
-      );
     }
-  };
+
+    function initialize() {
+      if (!window.google?.accounts?.id) {
+        setTimeout(initialize, 150);
+        return;
+      }
+
+      google.accounts.id.initialize({
+        client_id: clientId,
+        callback: handleCredentialResponse,
+        cancel_on_tap_outside: true
+      });
+
+      google.accounts.id.renderButton(button, {
+        type: 'standard',
+        shape: 'rectangular',
+        theme: 'outline',
+        text: 'signin_with',
+        size: 'large',
+        logo_alignment: 'left'
+      });
+    }
+
+    initialize();
+  });
 </script>
 <main class="login-page">
 
@@ -105,9 +138,6 @@
         {% if google_oauth_client_id %}
           <p class="section-label">Access with</p>
           <div id="google-signin-button"></div>
-          <p style="margin-top:10px;font-size:11px;color:#666;word-break:break-all;" aria-label="debug-google-client-id">
-            Google client_id (debug): {{ google_oauth_client_id|truncatechars:10 }}
-          </p>
         {% else %}
           <p class="section-label">Google sign in is not configured.</p>
         {% endif %}

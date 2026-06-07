@@ -17,7 +17,9 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-dotenv_path = BASE_DIR / 'Toolson' / '.env'
+dotenv_path = BASE_DIR / '.env'
+if not dotenv_path.exists():
+    dotenv_path = BASE_DIR / 'Toolson' / '.env'
 load_dotenv(dotenv_path)
 
 # Google Identity Services client id used by Login/Register templates

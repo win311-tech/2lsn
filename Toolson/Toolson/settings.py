@@ -1,10 +1,17 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+dotenv_path = BASE_DIR / '.env'
+if not dotenv_path.exists():
+    dotenv_path = BASE_DIR / 'Toolson' / '.env'
+load_dotenv(dotenv_path)
+
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-key-only")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
+GOOGLE_OAUTH_CLIENT_ID = os.environ.get('GOOGLE_OAUTH_CLIENT_ID')
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -90,3 +97,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # -------------------
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'index'
+
+# Django requires this setting to be present; it points to this project's URLconf.
+ROOT_URLCONF = 'Toolson.urls'

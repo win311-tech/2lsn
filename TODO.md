@@ -1,11 +1,8 @@
-- [x] Replace dashboard.html layout + add centered modal behavior via JavaScript (no redirects)
-- [x] Update static/css/style.css to style .mainimg as header for the paragraph
-- [x] Update template/index.html so wallpaper image uses class "wallpaper" and matches requested placement
-- [x] Improve template/Shop.html + static/css/shop.css sizing for smaller screens (reduce size issues)
+# TODO
 
-- [x] Make template/checkout.html responsive using JavaScript (stack/resize behaviors)
-- [ ] Manual verification: run server, test dashboard modal, index hero, shop responsiveness, checkout responsiveness
-- [x] Make Dashboard Favorites/Policy nav items interactive without redirecting
-
-
+## Template duplication consolidation
+- [x] Confirm Django template search path (`Toolson/Toolson/settings.py` uses `BASE_DIR / 'template'` → `c:/2LSN/Toolson/template`).
+- [ ] Move every file from `c:/2LSN/template/` into a backup folder `c:/2LSN/template_unused_backup/`.
+- [ ] Remove remaining files from `c:/2LSN/template/` (keep folder if empty).
+- [ ] Run `python manage.py check` and a quick template render smoke test.
 
