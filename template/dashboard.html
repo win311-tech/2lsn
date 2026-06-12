@@ -13,13 +13,13 @@
   </button>
 
   <aside class="account-side" id="accountMenu" aria-label="Account sections">
-    <nav class="account-nav">
-      <button class="account-tab is-active" type="button" data-panel="purchases">|01| Purchases</button>
+    <nav class="account-nav" aria-label="Dashboard section navigation">
+      <button class="account-tab is-active" type="button" data-panel="purchases" aria-controls="panel-purchases">|01| Purchases</button>
       <span class="account-tab-sub">Online</span>
-      <button class="account-tab" type="button" data-panel="favourites">|02| Favourites</button>
-      <button class="account-tab" type="button" data-panel="Contact Us">|03| Contact Us</button>
-      <button class="account-tab" type="button" data-panel="settings">|04| Settings</button>
-      <button class="account-tab" type="button" data-panel="notifications">|05| Notifications</button>
+      <button class="account-tab" type="button" data-panel="favourites" aria-controls="panel-favourites">|02| Favourites</button>
+      <button class="account-tab" type="button" data-panel="contact" aria-controls="panel-contact">|03| Contact Us</button>
+      <button class="account-tab" type="button" data-panel="policy" aria-controls="panel-policy">|04| Shipping Policy</button>
+      <button class="account-tab" type="button" data-panel="notifications" aria-controls="panel-notifications">|05| Notifications</button>
     </nav>
   </aside>
 
@@ -29,21 +29,55 @@
       <h1>You have not placed any orders yet</h1>
     </article>
 
-    <article class="account-panel favourites-active" id="panel-favourites">
+    <article class="account-panel" id="panel-favourites">
       <h1>Your Favourites</h1>
-      <div class="favourites-grid" id="favouritesGrid">
-        <p class="favourites-empty">Products you save from the shop will appear here.</p>
-      </div>
+      <div class="favourites-grid" id="favouritesGrid"></div>
     </article>
 
-    <article class="account-panel" id="panel-Contact Us">
+    <article class="account-panel" id="panel-contact">
       <h1>Contact Us</h1>
       <p>0202117060</p>
     </article>
 
-    <article class="account-panel" id="panel-settings">
-      <h1>Policy</h1>
-      <p>We plan on making terms very clear to out customers.Please anticaipate </p>
+    <article class="account-panel" id="panel-policy">
+      <div class="policy-copy policy-panel">
+        <div class="policy-header">
+          <h1>Shipping Policy</h1>
+          <p class="policy-intro">We want your order to arrive quickly, safely and with transparent delivery expectations. The following sections explain delivery timing, customs, import charges, and our working-day fulfillment policy.</p>
+        </div>
+
+        <div class="policy-grid">
+          <section class="policy-section">
+            <h2>UK Domestic Orders</h2>
+            <p>We provide next-day delivery for orders placed within the United Kingdom. Once your order is processed and dispatched, it will normally arrive the following working day. Processing times may vary slightly depending on order volume and payment verification.</p>
+          </section>
+
+          <section class="policy-section">
+            <h2>International Orders (Europe only)</h2>
+            <p>Orders shipped to European destinations are dispatched within 10–15 working days. This timeframe refers to order processing and shipment departure; actual delivery may take longer depending on carrier transit time, customs clearance, and local postal services.</p>
+          </section>
+
+          <section class="policy-section">
+            <h2>Delivery Estimates</h2>
+            <p>When your purchase is processed, we present the total amount payable and an estimated delivery date. This estimate is based on processing times, shipping method, and destination. Dates are projections and may change due to factors outside our control.</p>
+          </section>
+
+          <section class="policy-section">
+            <h2>Import Duties & Taxes</h2>
+            <p>International deliveries may be subject to duties, taxes, or other charges imposed by the destination country. If these charges apply, we will indicate whether they are payable at the time of purchase or upon delivery by the carrier or customs authority.</p>
+          </section>
+
+          <section class="policy-section">
+            <h2>Customs Advice</h2>
+            <p>If import fees are payable on delivery, we recommend contacting your local customs office for information on likely charges, procedures, and required documentation. Customs rules and rates differ between countries and may change without notice.</p>
+          </section>
+
+          <section class="policy-section">
+            <h2>Working Days Only</h2>
+            <p>Deliveries are carried out on working days only, typically Monday through Friday. Orders are not delivered on weekends or public holidays unless explicitly stated by the selected carrier or shipping option.</p>
+          </section>
+        </div>
+      </div>
     </article>
 
     <article class="account-panel" id="panel-notifications">
@@ -103,7 +137,9 @@
     }
 
     const emptyMsg = favouritesGrid.querySelector('.favourites-empty');
-    if (emptyMsg) emptyMsg.style.display = wishlist.length ? 'none' : 'block';
+    if (emptyMsg) {
+      emptyMsg.style.display = wishlist.length ? 'none' : 'block';
+    }
 
     const existingItems = favouritesGrid.querySelectorAll('.favourite-item');
     existingItems.forEach(item => item.remove());
