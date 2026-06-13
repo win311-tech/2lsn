@@ -11,7 +11,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('checkout/', views.checkout, name='checkout'),
     path('sign-out', views.sign_out, name='sign_out'),
-    path('auth-receiver', views.auth_receiver, name='auth_receiver')
-
+    path('auth_receiver/', views.auth_receiver, name='auth_receiver'),
 ]
+
 

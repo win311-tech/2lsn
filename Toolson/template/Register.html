@@ -2,93 +2,6 @@
 {% load static %}
 
 {% block content %}
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script>
-  window.addEventListener('load', function initializeGoogleAuth() {
-    const button = document.getElementById('google-signup-button');
-    const clientId = "{{ google_oauth_client_id }}";
-
-    if (window.location.hostname === '127.0.0.1') {
-      window.location.replace(window.location.href.replace('127.0.0.1', 'localhost'));
-      return;
-    }
-
-    if (!clientId) {
-      console.warn('Google OAuth client is not configured.');
-      return;
-    }
-
-    if (!button) {
-      console.warn('Google signup button container not found.');
-      return;
-    }
-
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
-        }
-      }
-      return cookieValue;
-    }
-
-    function handleCredentialResponse(response) {
-      if (!response?.credential) {
-        console.error('Google auth failed: no credential returned.');
-        return;
-      }
-
-      fetch('{% url "auth_receiver" %}', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': (document.querySelector('[name=csrfmiddlewaretoken]')?.value || getCookie('csrftoken'))
-        },
-        body: 'credential=' + encodeURIComponent(response.credential),
-        credentials: 'same-origin'
-      }).then(async (resp) => {
-        if (!resp.ok) {
-          const body = await resp.text().catch(() => '');
-          console.error('Auth failed:', resp.status, body);
-          return;
-        }
-        window.location.replace('{% url "dashboard" %}');
-      }).catch((error) => {
-        console.error('Auth request failed:', error);
-      });
-    }
-
-    function initialize() {
-      if (!window.google?.accounts?.id) {
-        setTimeout(initialize, 150);
-        return;
-      }
-
-      google.accounts.id.initialize({
-        client_id: clientId,
-        callback: handleCredentialResponse,
-        cancel_on_tap_outside: true
-      });
-
-      google.accounts.id.renderButton(button, {
-        type: 'standard',
-        shape: 'rectangular',
-        theme: 'outline',
-        text: 'signup_with',
-        size: 'large',
-        logo_alignment: 'left'
-      });
-    }
-
-    initialize();
-  });
-</script>
 <main class="register-page">
   <div class="register-layout">
     <section class="register-left" aria-label="Register form">
@@ -101,13 +14,6 @@
 
         <h2 class="register-title">Create Account</h2>
 
-        {% if messages %}
-          <div class="auth-messages">
-            {% for message in messages %}
-              <p class="auth-message">{{ message }}</p>
-            {% endfor %}
-          </div>
-        {% endif %}
 
         <form method="post" novalidate>
           {% csrf_token %}
@@ -140,15 +46,9 @@
           <button type="submit" class="btn">Register</button>
 
           <div class="divider">or</div>
-
-          {% if google_oauth_client_id %}
-            <p class="section-label">Access with</p>
-            <div id="google-signup-button"></div>
-          {% else %}
-            <p class="section-label">Google sign up is not configured.</p>
-          {% endif %}
-
+          {# Google sign-in disabled here to avoid Firebase/legacy OAuth conflicts. #}
           <p class="section-label">Already have an account?</p>
+
           <div class="register-footer">
             {% if user.is_authenticated %}
               <a href="{% url 'dashboard' %}">Dashboard</a>

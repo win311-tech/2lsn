@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
 from .forms import SignUpForm, LoginForm
-import os
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from google.oauth2 import id_token
@@ -24,7 +23,6 @@ def redirect_localhost(request):
 def Index(request):
     """Public homepage - accessible to everyone"""
     return render(request, 'index.html', {
-
         'user': request.user
     })
 
@@ -42,13 +40,10 @@ def Register(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Log the user in after signup
             login(request, user)
             messages.success(request, f'Welcome to 2LSN, {user.first_name}!')
-            # Redirect to user dashboard (NOT admin)
             return redirect('dashboard')
         else:
-            # Show errors
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f'{field}: {error}')
@@ -60,6 +55,7 @@ def Register(request):
         'google_oauth_client_id': settings.GOOGLE_OAUTH_CLIENT_ID,
     })
 
+
 def Login(request):
     """Handle user login"""
     if request.user.is_authenticated:
@@ -70,30 +66,25 @@ def Login(request):
         return redirect(redirect_url)
 
     if request.method == 'POST':
-        # form field names from Login.html are: email, password
         username = request.POST.get('email')
         password = request.POST.get('password')
 
-        # Try to authenticate (username is stored as email in SignUpForm.save)
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
             messages.success(request, f'Welcome back, {user.first_name or user.username}!')
-            # Redirect to user dashboard (NOT admin)
             next_url = request.POST.get('next') or request.GET.get('next')
-            # Always redirect to the dashboard unless a valid next is explicitly provided
             return redirect(next_url or 'dashboard')
 
-        else:
-            messages.error(request, 'Invalid email or password. Please try again.')
+        messages.error(request, 'Invalid email or password. Please try again.')
 
     form = LoginForm()
     return render(request, 'Login.html', {
         'form': form,
         'google_oauth_client_id': settings.GOOGLE_OAUTH_CLIENT_ID,
+        'login_template_id': 'toolson-template-login',
     })
-
 
 
 def logout_view(request):
@@ -122,6 +113,7 @@ def About(request):
         'user': request.user
     })
 
+
 @login_required(login_url='login')
 def checkout(request):
     return render(request, 'checkout.html', {
@@ -129,54 +121,53 @@ def checkout(request):
     })
 
 
-
 @csrf_exempt
 def sign_in(request):
     return render(request, 'sign_in.html')
- 
-def auth_receiver(request):
-    """Google Identity sends the credential to this endpoint."""
-
-    token = request.POST.get('credential')
-    if not token:
-        return HttpResponse('Missing Google credential.', status=400)
-
-    client_id = settings.GOOGLE_OAUTH_CLIENT_ID or os.environ.get('GOOGLE_OAUTH_CLIENT_ID')
-    if not client_id:
-        return HttpResponse('Google OAuth client ID is not configured.', status=500)
-
-    try:
-        user_data = id_token.verify_oauth2_token(
-            token, requests.Request(), client_id
-        )
-    except ValueError as e:
-        return HttpResponse(f'Invalid Google token: {e}', status=403)
-
-
-    email = user_data.get('email')
-    if not email:
-        return HttpResponse('Google account did not provide an email address.', status=400)
-
-    User = get_user_model()
-    user, created = User.objects.get_or_create(
-        username=email,
-        defaults={
-            'email': email,
-            'first_name': user_data.get('given_name', ''),
-            'last_name': user_data.get('family_name', ''),
-        }
-    )
-
-    if created:
-        user.set_unusable_password()
-        user.save()
-
-    user.backend = 'django.contrib.auth.backends.ModelBackend'
-    login(request, user)
-    return redirect('dashboard')
 
 
 def sign_out(request):
     request.session.pop('user_data', None)
     return redirect('login')
- 
+
+
+@csrf_exempt
+def auth_receiver(request):
+    """Receive Google Identity Services (GSI) credential JWT and log the user in."""
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+
+    credential = request.POST.get('credential')
+    if not credential:
+        return HttpResponse(status=400)
+
+    try:
+        client_id = settings.GOOGLE_OAUTH_CLIENT_ID
+        idinfo = id_token.verify_oauth2_token(
+            credential,
+            requests.Request(),
+            client_id,
+        )
+
+        email = idinfo.get('email')
+        if not email:
+            return HttpResponse(status=400)
+
+        UserModel = get_user_model()
+        user, _created = UserModel.objects.get_or_create(
+            email__iexact=email,
+            defaults={'email': email, 'username': email},
+        )
+
+        if getattr(user, 'username', '') != email:
+            user.username = email
+        if not getattr(user, 'email', ''):
+            user.email = email
+        user.save()
+
+        login(request, user)
+        return redirect('dashboard')
+
+    except Exception:
+        return HttpResponse(status=401)
+
