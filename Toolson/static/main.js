@@ -136,8 +136,10 @@ if (auth) {
         }).then(resp => {
           if (resp.ok) {
             console.log("[main.js] Django backend session successfully established");
-            window.location.href = "/dashboard/";
+            // Auth completed; do not force navigation.
+            return;
           } else {
+
             console.error("[main.js] Django session establishment failed with status:", resp.status);
             showAuthError("Failed to sync authorization with Django. Please try again.");
           }

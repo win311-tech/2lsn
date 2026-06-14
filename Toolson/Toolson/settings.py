@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-
+from decouple import config 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 dotenv_path = BASE_DIR / '.env'
@@ -101,3 +101,5 @@ LOGOUT_REDIRECT_URL = 'index'
 
 # Django requires this setting to be present; it points to this project's URLconf.
 ROOT_URLCONF = 'Toolson.urls'
+
+PAYSTACK_SECRET_KEY =config("PAYSTACK_SECRET_KEY    ")

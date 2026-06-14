@@ -44,8 +44,15 @@
         <input type="text" name="address" placeholder="Delivery address" autocomplete="street-address" required>
         <input type="text" name="city" placeholder="City" autocomplete="address-level2" required>
         <input type="number" name="contact" placeholder="Contact number" autocomplete="tel" required>
-        <button type="submit" class="cart-checkout">Place Order</button>
+        <button type="submit" class="cart-checkout" a href="{% url 'checkout-product' product.id %}">Place Order</button>
         <p class="checkout-message" id="checkout-message" aria-live="polite"></p>
+        {% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'error' %}
+            <p style="color:firebrick;">{{message}}</p>
+        {% endif %}
+    {% endfor %}
+{% endif %} 
       </form>
     </section>
   </section>
