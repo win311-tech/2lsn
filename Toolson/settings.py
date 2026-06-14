@@ -36,6 +36,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.ngrok.io",
+    "https://*.ngrok-free.app"
+]
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -119,4 +124,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'index'
+
+PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY', 'sk_test_c1b7fd5bbec10287263b21b64291428f50527ce2')
 

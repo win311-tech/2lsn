@@ -13,6 +13,7 @@ urlpatterns = [
     path('sign-out', views.sign_out, name='sign_out'),
     path('auth_receiver/', views.auth_receiver, name='auth_receiver'),
     path('checkout/<int:product_id>/', views.create_paystack_checkout_session, name='checkout-product'),
+    path('paystack-webhook/', views.paystack_webhook, name='paystack-webhook'),
 ]
 
 

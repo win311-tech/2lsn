@@ -12,7 +12,8 @@ class Product(models.Model):
     stock = models.PositiveIntegerField()
 
 def __str__(self):
-    return self.name     
+    return self.name
+
 
 
 class UserProfile(models.Model):
@@ -36,19 +37,21 @@ class UserProfile(models.Model):
 class Shop(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    Product = models.ManyToManyField(Product)
-    Cart = models.ManyToManyField(Product, related_name='cart_products')
+    products = models.ManyToManyField(Product)
     type = models.CharField(max_length=50)
     Logo = models.ImageField(upload_to='shop_logos/', blank=True, null=True)
-    BnnnerImage = models.ImageField(upload_to='shop_banners/', blank=True, null=True)   
+    BnnnerImage = models.ImageField(upload_to='shop_banners/', blank=True, null=True)
+
     
 class Cart(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
     totalAmount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    Number = model.PositiveIntegerField(default=0)
-    CartItem = model.CharField(max_length=100, blank=True)  
+    Number = models.PositiveIntegerField(default=0)
+
+    CartItem = models.CharField(max_length=100, blank=True)
+
     
     
     
@@ -65,7 +68,8 @@ class Checkout(models.Model):
     products = models.ManyToManyField(Product)
     totalAmount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     address = models.CharField(max_length=255)
-    Order = model.CharField(max_length=100, blank=True)
+    Order = models.CharField(max_length=100, blank=True)
+
     contact_number = models.CharField(max_length=20)
     
 

@@ -16,7 +16,14 @@ GOOGLE_OAUTH_CLIENT_ID = os.environ.get('GOOGLE_OAUTH_CLIENT_ID')
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    ".onrender.com"
+    ".onrender.com",
+    ".ngrok.io",
+    ".ngrok-free.app"
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.ngrok.io",
+    "https://*.ngrok-free.app"
 ]
 
 # -------------------
@@ -102,4 +109,4 @@ LOGOUT_REDIRECT_URL = 'index'
 # Django requires this setting to be present; it points to this project's URLconf.
 ROOT_URLCONF = 'Toolson.urls'
 
-PAYSTACK_SECRET_KEY =config("PAYSTACK_SECRET_KEY    ")
+PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY")
